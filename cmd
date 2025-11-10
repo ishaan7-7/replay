@@ -548,3 +548,94 @@ io.delta#delta-core_2.12 added as a dependency
 2025-11-11 02:36:37,744 INFO Batch 0 empty - nothing to do
 2025-11-11 02:36:37,744 INFO Finished processing batch 0 in 0.194s
 25/11/11 02:36:38 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 5000 milliseconds, but spent 6012 milliseconds
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Project root
+PROJECT_ROOT=C:\engine_module_pipeline
+VENV_ACTIVATE=C:\engine_module_pipeline\.venv\Scripts\activate.bat
+PYTHON_EXE=C:\engine_module_pipeline\.venv\Scripts\python.exe
+FALLBACK_PYTHON=C:\Users\ishaan256185\AppData\Local\Programs\Python\Python311\python.exe
+
+# CSV (replayer)
+REPLAYER_DEFAULT_CSV=C:\engine_module_pipeline\data\csv\engine_module.csv
+
+# Paths
+LOG_DIR=C:\engine_module_pipeline\logs
+DLQ_DIR=C:\engine_module_pipeline\dlq
+CHECKPOINT_DIR=C:\engine_module_pipeline\data\checkpoints
+DELTA_BASE=C:\engine_module_pipeline\delta
+DELTA_TABLE_PATH=C:\engine_module_pipeline\delta\engine_module_delta
+DATA_RAW=C:\engine_module_pipeline\data\raw
+SPARK_LOCAL_DIR=C:\engine_module_pipeline\tmp\spark_local
+
+# Kafka
+KAFKA_BOOTSTRAP_SERVERS=127.0.0.1:9092
+KAFKA_TOPIC=engine_module
+KAFKA_PARTITIONS=12
+KAFKA_KEY_FIELD=source_id
+
+# Consumer group / backfill
+CONSUMER_GROUP=engine_module_consumer_grp_backfill
+BACKFILL_MODE=true
+
+# Batch settings
+BATCH_SIZE=500
+BATCH_MAX_WAIT_S=5.0
+
+# Java / Spark
+JAVA_HOME=C:\jdk-11.0.28+6
+PYSPARK_PYTHON=C:\engine_module_pipeline\.venv\Scripts\python.exe
+PYSPARK_DRIVER_PYTHON=C:\engine_module_pipeline\.venv\Scripts\python.exe
+SPARK_LOCAL_IP=127.0.0.1
+SPARK_HOME=C:\spark-3.3.4-bin-hadoop3
+
+
+# Observability / misc
+PROMETHEUS_PORT=8001
+LOG_LEVEL=INFO
+
+KAFKA_BOOTSTRAP_SERVERS=127.0.0.1:9092
+KAFKA_TOPIC=engine_module
+CONSUMER_GROUP=engine_module_backfill_fresh_v2
+BACKFILL_MODE=true
+PROMETHEUS_PORT=8001
+MLFLOW_TRACKING_URI=file:///C:/engine_module_pipeline/mlruns
+
+
+
+
+
+
+
+C:\engine_module_pipeline>call .venv\Scripts\Activate.bat
+
+(.venv) C:\engine_module_pipeline>uvicorn fastapi_ingest.app.main:app --host 127.0.0.1 --port 8000 --reload
+
+
+
+(.venv) C:\engine_module_pipeline>python replay\replayer.py ^
+More?   --csv data\csv\engine_module.csv ^
+More?   --source-id sim001 ^
+More?   --features config\features.json ^
+More?   --batch-size 50 ^
+More?   --mode time_scaled ^
+More?   --max-rps 5
+
+
+
+
+
+
